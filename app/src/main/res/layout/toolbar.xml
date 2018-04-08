@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--    fitsSystemWindows attribute is set to true for a view, the view would be laid out
+            as if the StatusBar and the ActionBar were present.
+            I have already disabled ActionBar in styles so i set the attribute to false -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolbar_background"
+        android:fitsSystemWindows="false"
+        android:minHeight="?attr/actionBarSize"
+        android:padding="@dimen/dimen_4"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_logo"
+            android:layout_height="?attr/actionBarSize"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/description_main_logo"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_logo" />
+
+        <Button
+            android:id="@+id/drawer_button"
+            android:layout_width="@dimen/dimen_42"
+            android:layout_height="@dimen/dimen_42"
+            android:layout_gravity="end"
+            android:background="@drawable/drawer_button_selector" />
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:searchHintIcon="@drawable/icon_search_hint"
+            app:searchIcon="@drawable/icon_search">
+
+        </android.support.v7.widget.SearchView>
+    </android.support.v7.widget.Toolbar>
+</layout>

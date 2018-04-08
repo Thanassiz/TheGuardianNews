@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DIMENSIONS -->
+    <dimen name="dimen_list_height">256dp</dimen>
+    <dimen name="dimen_logo">150dp</dimen>
+    <dimen name="dimen_56">56dp</dimen>
+    <dimen name="dimen_42">42dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_4">4dp</dimen>
+    <dimen name="dimen_2">2dp</dimen>
+    <dimen name="dimen_0">0dp</dimen>
+    <!-- TEXT SIZES -->
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+
+</resources>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">The Guardian News</string>
+    <!-- DESCRIPTIONS -->
+    <string name="description_main_logo">Main Logo</string>
+    <string name="description_thumbnail_news">Thumbnail News</string>
+
+    <!-- FRAGMENT LABELS -->
+    <string name="fragment_home">Home</string>
+    <string name="fragment_music">Music</string>
+    <string name="fragment_business">Business</string>
+    <string name="fragment_technology">Technology</string>
+    <string name="fragment_politics">Politics</string>
+    <string name="fragment_sport">Sport</string>
+    <string name="fragment_weather">Weather</string>
+    <string name="fragment_film">Film</string>
+    <string name="fragment_money">Money</string>
+    <string name="fragment_education">Education</string>
+    <string name="fragment_environment">Environment</string>
+    <string name="fragment_fashion">Fashion</string>
+
+    <string name="no_news_found">No news found.</string>
+    <string name="no_internet_connection">There is no internet connection.</string>
+
+</resources>
