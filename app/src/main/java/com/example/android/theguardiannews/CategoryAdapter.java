@@ -48,8 +48,8 @@ public class CategoryAdapter extends SmartFragmentStatePagerAdapter {
                 return NewsFragment.newInstance(context.getString(R.string.fragment_money), Constants.MONEY);
             case Constants.EDUCATION:
                 return NewsFragment.newInstance(context.getString(R.string.fragment_education), Constants.EDUCATION);
-            case Constants.ENVIROMENT:
-                return NewsFragment.newInstance(context.getString(R.string.fragment_environment), Constants.ENVIROMENT);
+            case Constants.ENVIRONMENT:
+                return NewsFragment.newInstance(context.getString(R.string.fragment_environment), Constants.ENVIRONMENT);
             case Constants.FASHION:
                 return NewsFragment.newInstance(context.getString(R.string.fragment_fashion), Constants.FASHION);
             default:
@@ -92,7 +92,7 @@ public class CategoryAdapter extends SmartFragmentStatePagerAdapter {
                 return context.getString(R.string.fragment_money);
             case Constants.EDUCATION:
                 return context.getString(R.string.fragment_education);
-            case Constants.ENVIROMENT:
+            case Constants.ENVIRONMENT:
                 return context.getString(R.string.fragment_environment);
             case Constants.FASHION:
                 return context.getString(R.string.fragment_fashion);

@@ -4,24 +4,31 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.android.theguardiannews.databinding.ActivityMainBinding;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private final String TAG = MainActivity.class.getSimpleName();
 
     private ActivityMainBinding binding;
-    public static List<News> list;
+    AppCompatSpinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // Attaching the layout to the toolbar object
         // Setting toolbar as the ActionBar with setSupportActionBar() call
@@ -39,10 +46,28 @@ public class MainActivity extends AppCompatActivity {
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, getSupportFragmentManager());
         binding.viewpager.setAdapter(categoryAdapter);
+        setSpinner();
+        binding.viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.e(TAG, "VIEWPAGER ->" + position);
+                // Set spinner similar to the corresponding viewpager's fragment position
+                spinner.setSelection(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
-    private void setupDrawerItem(NavigationView navigationView){
+    private void setupDrawerItem(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -52,11 +77,107 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void selectDrawerItem(MenuItem menuItem){
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Close the navigation drawer
-        binding.drawer.closeDrawers();
+    private void selectDrawerItem(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_settings:
+                Toast.makeText(getApplicationContext(), "This feature will be added in the next patch!", Toast.LENGTH_SHORT).show();
+                // Close the navigation drawer
+                binding.drawer.closeDrawers();
+                break;
+            case R.id.nav_spinner:
+                Toast.makeText(getApplicationContext(), "Select news from the list.", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Whenever spinner News is selected it sends you to the corresponding News fragment
+     */
+    private void setSpinner() {
+
+        final ArrayList<String> spinnerList = new ArrayList<>();
+        spinnerList.add(getString(R.string.fragment_home));
+        spinnerList.add(getString(R.string.fragment_music));
+        spinnerList.add(getString(R.string.fragment_business));
+        spinnerList.add(getString(R.string.fragment_technology));
+        spinnerList.add(getString(R.string.fragment_politics));
+        spinnerList.add(getString(R.string.fragment_sport) + "s");
+        spinnerList.add(getString(R.string.fragment_weather));
+        spinnerList.add(getString(R.string.fragment_film) + "s");
+        spinnerList.add(getString(R.string.fragment_money));
+        spinnerList.add(getString(R.string.fragment_education));
+        spinnerList.add(getString(R.string.fragment_environment));
+        spinnerList.add(getString(R.string.fragment_fashion));
+
+        spinner = (AppCompatSpinner) binding.navView.getMenu().findItem(R.id.nav_spinner).getActionView();
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerList));
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "SPINNER ->" + position);
+                Toast.makeText(MainActivity.this, spinnerList.get(position), Toast.LENGTH_SHORT).show();
+                switch (position) {
+                    case Constants.HOME:
+                        binding.viewpager.setCurrentItem(Constants.HOME);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.MUSIC:
+                        binding.viewpager.setCurrentItem(Constants.MUSIC);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.BUSINESS:
+                        binding.viewpager.setCurrentItem(Constants.BUSINESS);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.TECHNOLOGY:
+                        binding.viewpager.setCurrentItem(Constants.TECHNOLOGY);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.POLITICS:
+                        binding.viewpager.setCurrentItem(Constants.POLITICS);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.SPORTS:
+                        binding.viewpager.setCurrentItem(Constants.SPORTS);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.WEATHER:
+                        binding.viewpager.setCurrentItem(Constants.WEATHER);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.FILM:
+                        binding.viewpager.setCurrentItem(Constants.FILM);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.MONEY:
+                        binding.viewpager.setCurrentItem(Constants.MONEY);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.EDUCATION:
+                        binding.viewpager.setCurrentItem(Constants.EDUCATION);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.ENVIRONMENT:
+                        binding.viewpager.setCurrentItem(Constants.ENVIRONMENT);
+                        binding.drawer.closeDrawers();
+                        break;
+                    case Constants.FASHION:
+                        binding.viewpager.setCurrentItem(Constants.FASHION);
+                        binding.drawer.closeDrawers();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
 

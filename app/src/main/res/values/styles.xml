@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Style Navigation Drawer -->
+    <style name="NavigationView" >
+        <item name="android:textColorSecondary">@color/colorLightBlue</item> <!--Main Color of Menu Icons-->
+        <item name="listPreferredItemPaddingRight">@dimen/dimen_56</item> <!-- Padding Right -->
+    </style>
+
 </resources>

@@ -22,7 +22,7 @@ public final class Constants {
     static final int FILM = 7;
     static final int MONEY = 8;
     static final int EDUCATION = 9;
-    static final int ENVIROMENT = 10;
+    static final int ENVIRONMENT = 10;
     static final int FASHION = 11;
 
     /**  Extract the key associated with the JSONObject */
