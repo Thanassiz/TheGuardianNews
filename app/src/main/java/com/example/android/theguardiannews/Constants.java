@@ -37,8 +37,10 @@ public final class Constants {
     static final String JSON_KEY_THUMBNAIL = "thumbnail";
     static final String JSON_KEY_TRAIL_TEXT = "trailText";
 
-    /** HTTP response code when the request is successful */
+    /** HTTP response code when getResponse is called */
     static final int SUCCESS_RESPONSE_CODE = 200;
+    static final int BAD_REQUEST_RESPONSE_CODE = 400;
+    static final int SERVICE_UNAVAILABLE_RESPONSE_CODE = 503;
 
     /** Constants value for Bundle Arguments */
     static final String STATE_NEWS_SECTION = "section";

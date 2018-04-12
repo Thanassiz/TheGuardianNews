@@ -2,19 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- Define the name of Databinding for the news item -->
     <data class="RecyclerNewsBinding">
 
         <variable
             name="newsView"
             type="com.example.android.theguardiannews.News" />
-
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:padding="@dimen/dimen_4"
         app:cardCornerRadius="@dimen/dimen_16">
 
@@ -125,6 +123,7 @@
 
                 </LinearLayout>
             </LinearLayout>
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

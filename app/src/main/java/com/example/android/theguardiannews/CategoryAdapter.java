@@ -4,16 +4,17 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
 /**
  * Created by Thanassis on 5/4/2018.
  * Fragment to display list of news items with more dynamic ViewPager items.
  */
 
-public class CategoryAdapter extends SmartFragmentStatePagerAdapter {
+public class CategoryAdapter extends FragmentPagerAdapter {
 
     private static  String TAG = CategoryAdapter.class.getSimpleName();
-    private int NUM_PAGES = 12;
+    private static int NUM_PAGES = 12;
     private Context context;
 
 
@@ -52,8 +53,10 @@ public class CategoryAdapter extends SmartFragmentStatePagerAdapter {
                 return NewsFragment.newInstance(context.getString(R.string.fragment_environment), Constants.ENVIRONMENT);
             case Constants.FASHION:
                 return NewsFragment.newInstance(context.getString(R.string.fragment_fashion), Constants.FASHION);
+            case 13:
+                return NewsFragment.newInstance("Search", 13);
             default:
-                return NewsFragment.newInstance(context.getString(R.string.fragment_home), Constants.HOME);
+                return null;
         }
     }
 
@@ -96,8 +99,10 @@ public class CategoryAdapter extends SmartFragmentStatePagerAdapter {
                 return context.getString(R.string.fragment_environment);
             case Constants.FASHION:
                 return context.getString(R.string.fragment_fashion);
+            case 13:
+                return "Search Results";
             default:
-                return context.getString(R.string.fragment_home);
+                return null;
         }
     }
 

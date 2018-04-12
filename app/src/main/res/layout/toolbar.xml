@@ -37,6 +37,14 @@
             app:searchHintIcon="@drawable/icon_search_hint"
             app:searchIcon="@drawable/icon_search">
 
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="@dimen/dimen_42"
+                android:layout_height="@dimen/dimen_42"
+                android:layout_gravity="end"
+                android:background="@drawable/back_button_selector"
+                android:layout_marginRight="@dimen/dimen_8"/>
+
         </android.support.v7.widget.SearchView>
     </android.support.v7.widget.Toolbar>
 </layout>

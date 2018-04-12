@@ -1,18 +1,26 @@
 package com.example.android.theguardiannews;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.theguardiannews.databinding.ActivityMainBinding;
@@ -23,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
 
     private ActivityMainBinding binding;
+    CategoryAdapter categoryAdapter;
     AppCompatSpinner spinner;
+    NewsFragment newsFragment;
+    public static String searchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +45,15 @@ public class MainActivity extends AppCompatActivity {
         // Setting toolbar as the ActionBar with setSupportActionBar() call
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // Setup Navigation drawer
-        setupDrawerItem(binding.navView);
 
+        keyboardSearch();
+        binding.includeToolbar.backButton.setVisibility(View.GONE);
+        binding.includeToolbar.backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         binding.includeToolbar.drawerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,8 +61,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(this, getSupportFragmentManager());
+        // Setup Navigation drawer
+        setupDrawerItem(binding.navView);
+        // Setup CatergoryAdapter, ViewPager and TabLayout
+        categoryAdapter = new CategoryAdapter(this, getSupportFragmentManager());
+        binding.pagertab.setupWithViewPager(binding.viewpager);
         binding.viewpager.setAdapter(categoryAdapter);
+        // Setup Spinner
         setSpinner();
         binding.viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -180,6 +202,76 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void keyboardSearch() {
+        //Grab de EditText from the SearchView
+        final EditText editText = binding.includeToolbar.searchview.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int keyAction, KeyEvent keyEvent) {
+                if (
+                    //Soft keyboard search
+                        keyAction == EditorInfo.IME_ACTION_SEARCH ||
+                                //Physical keyboard enter key
+                                (keyEvent != null && KeyEvent.KEYCODE_ENTER == keyEvent.getKeyCode() && keyEvent.getAction() == KeyEvent.ACTION_DOWN)) {
+                    // Get the input text
+                    searchText = binding.includeToolbar.searchview.getQuery().toString();
+                    Log.e(TAG, searchText);
+
+                    searchNews();
+
+                    // When pressing the search button, hide the keyboard
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(binding.includeToolbar.searchview.getWindowToken(), 0);
+                    binding.includeToolbar.searchview.onActionViewCollapsed(); // Reset searchview
+                    binding.includeToolbar.searchview.setImeOptions(EditorInfo.IME_ACTION_SEARCH); // set search action in view cause onActionCollapsed changes it.
+                    binding.includeToolbar.searchview.clearFocus();
+                    binding.includeToolbar.backButton.setVisibility(View.VISIBLE);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void searchNews() {
+
+        newsFragment = NewsFragment.newInstance(searchText, 13);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, newsFragment, "searchTag")
+                .addToBackStack("viewPagerTag")
+                .commit();
+    }
+
+    /**
+     * Destroy the Search fragment and replace back with viewpager.
+     */
+    @Override
+    public void onBackPressed() {
+        if (binding.includeToolbar.searchview.isIconified()) {
+            // We retrieve the fragment manager of the activity
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            // We retrieve the fragment container showed right now
+            // The viewpager assigns tags to fragment automatically like this
+            // binding.viewpager is our ViewPager instance
+            Fragment fragment = fragmentManager.findFragmentByTag("searchTag");
+            //Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + binding.viewpager.getId() + ":" + binding.viewpager.getCurrentItem());
+            // And thanks to the fragment container, we retrieve its child fragment manager
+            // holding our fragment in the back stack
+            FragmentManager childFragmentManager = fragment.getChildFragmentManager();
+            // And here we go, if the back stack is empty, we let the back button doing its job
+            // Otherwise, we show the last entry in the back stack (our FragmentToShow)
+            if (childFragmentManager.getBackStackEntryCount() == 0) {
+                super.onBackPressed();
+            } else {
+                childFragmentManager.popBackStack();
+            }
+
+            // Remove Fragment
+         /*   getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            childFragmentManager.beginTransaction().remove(fragment).commit();*/
+            binding.includeToolbar.backButton.setVisibility(View.GONE);
+        }
+    }
 
     static String jsonTEST = "{\"response\":{\"status\":\"ok\",\"userTier\":\"developer\",\"total\":18,\"startIndex\":1,\"pageSize\":10,\"currentPage\":1,\"pages\":2,\"orderBy\":\"relevance\",\"results\":[" +
             "{\"id\":\"books/booksblog/2016/oct/24/poem-of-the-week-and-shuntaro-tanikawa\",\"type\":\"article\",\"sectionId\":\"books\",\"sectionName\":\"Books\",\"webPublicationDate\":\"2016-10-24T10:52:10Z\",\"webTitle\":\"Poem of the Week: And by Shuntarō Tanikawa, translated by William I Elliott and Kazuo Kawamura\",\"webUrl\":\"https://www.theguardian.com/books/booksblog/2016/oct/24/poem-of-the-week-and-shuntaro-tanikawa\",\"apiUrl\":\"https://content.guardianapis.com/books/booksblog/2016/oct/24/poem-of-the-week-and-shuntaro-tanikawa\",\"fields\":{\"trailText\":\"An illuminating offering from one of the world’s ‘active poetic volcanoes’ uses haiku influences to reflect on death’s proximity\",\"thumbnail\":\"https://media.guim.co.uk/3065a0c6189a9e7462bb19da44134db497bb8467/0_17_1369_821/500.jpg\"},\"tags\":[{\"id\":\"profile/carolrumens\",\"type\":\"contributor\",\"webTitle\":\"Carol Rumens\",\"webUrl\":\"https://www.theguardian.com/profile/carolrumens\",\"apiUrl\":\"https://content.guardianapis.com/profile/carolrumens\",\"references\":[],\"bio\":\"<p>Carol Rumens is the author of 14 collections of poems, as well as occasional fiction, drama and translation. She has received the Cholmondeley Award and the Prudence Farmer Prize, and was joint recipient of an Alice Hunt Bartlett Award. Her most recent publication is the prose book, Self into Song, based on three poetry lectures delivered in the Bloodaxe-Newcastle University Lecture Series. She is currently professor in creative writing at Bangor University, and is a fellow of the Royal Society of Literature. Her latest collection is <a href=\\\"http://www.serenbooks.com/book/de-chiricos-threads/9781854115348\\\">De Chirico's Threads, published by Seren Books</a>.</p>\",\"bylineImageUrl\":\"https://static.guim.co.uk/artsblog/authorpics/carol_rumens.jpg\",\"firstName\":\"rumens\",\"lastName\":\"carol\"}],\"isHosted\":false,\"pillarId\":\"pillar/arts\",\"pillarName\":\"Arts\"}," +

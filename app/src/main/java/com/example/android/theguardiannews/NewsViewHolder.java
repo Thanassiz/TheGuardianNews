@@ -6,16 +6,14 @@ import com.example.android.theguardiannews.databinding.RecyclerNewsBinding;
 
 /**
  * Created by Thanassis on 3/4/2018.
+ * The base class for all generated bindings
  */
 
 public class NewsViewHolder extends RecyclerView.ViewHolder {
-    private  final RecyclerNewsBinding binding;
-    /** The base class for all generated bindings*/
 
+    private  final RecyclerNewsBinding binding;
 
     /**
-     *
-     * @param binding
      */
     public NewsViewHolder(RecyclerNewsBinding binding) {
         super(binding.getRoot());
@@ -39,4 +37,5 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
     public RecyclerNewsBinding getBinding() {
         return binding;
     }
+
 }

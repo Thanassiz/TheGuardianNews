@@ -18,7 +18,21 @@
     <string name="fragment_environment">Environment</string>
     <string name="fragment_fashion">Fashion</string>
 
+    <!-- ERRORS -->
     <string name="no_news_found">No news found.</string>
     <string name="no_internet_connection">There is no internet connection.</string>
+    <string name="exception_error_http_request">Problem making the HTTP request.</string>
+    <string name="exception_error_build_url">Problem building the URL.</string>
+    <string name="exception_error_retrieve_json_result">Problem retrieving the News JSON results.</string>
+    <string name="exception_json_error_parsing">Problem parsing the news JSON results.</string>
+    <string name="error_bad_request">The server cannot or will not process the request due to an apparent client error.</string>
+    <string name="error_server_anavailable">The server is currently unavailable (because it is overloaded or down for maintenance).</string>
+    <string name="error_response_code">Error response code:&#160;</string>
+
+    <!-- TOAST and DISPLAY -->
+    <string name="share_news_display_content">Share News</string>
+    <string name="pop_up_share">Share</string>
+    <string name="navigation_settings_title">Settings</string>
+    <string name="exception_error_format_date">Failed formatting the date.</string>
 
 </resources>

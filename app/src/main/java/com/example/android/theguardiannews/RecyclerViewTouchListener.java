@@ -15,10 +15,14 @@ import android.view.View;
 
 public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
 
-    /** Class tag name */
+    /**
+     * Class tag name
+     */
     private static final String TAG = RecyclerViewTouchListener.class.getSimpleName();
 
-    /** GestureDetector to intercept touch events */
+    /**
+     * GestureDetector to intercept touch events
+     */
     private GestureDetector gestureDetector;
     private RecyclerViewItemClickListener clickListener;
 
@@ -27,17 +31,18 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
      */
     public RecyclerViewTouchListener(Context context, final RecyclerView recyclerView, final RecyclerViewItemClickListener clickListener) {
         this.clickListener = clickListener;
-        this.gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+        this.gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
 
+
             @Override
             public void onLongPress(MotionEvent e) {
                 // Find the long pressed view
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                if(child != null && clickListener != null){
+                if (child != null && clickListener != null) {
                     clickListener.onLongClick(child, recyclerView.getChildLayoutPosition(child));
                     Log.e(TAG, "Long Click, Child's ID: " + child.getId());
                 }
@@ -47,18 +52,19 @@ public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListen
 
     /**
      * Take over touch events sent to the RecyclerView before they are handled by either the RecyclerView itself or its child views.
-     *
-     *  Returns true if this OnItemTouchListener wishes to begin intercepting touch events,
-     *  false to continue with the current behavior and continue observing future events in the gesture.
+     * <p>
+     * Returns true if this OnItemTouchListener wishes to begin intercepting touch events,
+     * false to continue with the current behavior and continue observing future events in the gesture.
      */
     @Override
     public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
         View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-        if(child != null && clickListener != null && gestureDetector.onTouchEvent(e)){
+        if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
             clickListener.onClick(child, recyclerView.getChildLayoutPosition(child));
             child.getParent().requestDisallowInterceptTouchEvent(false);
             Log.e(TAG, "Simple Click, Child's ID: " + child.getId());
         }
+
         return false;
     }
 

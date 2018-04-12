@@ -26,7 +26,8 @@ import java.util.List;
 public class Utils {
 
     private static final String TAG = Utils.class.getName();
-    private static Context mContext;
+    private static Context context;
+
 
     /**
      * Query the URL and return a list of {@link News} objects.
@@ -39,7 +40,7 @@ public class Utils {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(TAG, "Problem making the HTTP request.", e);
+            Log.e(TAG, context.getString(R.string.exception_error_http_request), e);
         }
         // Extract relevant fields from the JSON response and create a list of {@link NewsItem}s
         List<News> newsList = extractFeatureFromJson(jsonResponse);
@@ -63,7 +64,7 @@ public class Utils {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Problem building the URL ", e);
+            Log.e(TAG, context.getString(R.string.exception_error_build_url), e);
         }
         return url;
     }
@@ -92,11 +93,16 @@ public class Utils {
             if (urlConnection.getResponseCode() == Constants.SUCCESS_RESPONSE_CODE) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
+            }else if(urlConnection.getResponseCode() == Constants.BAD_REQUEST_RESPONSE_CODE){
+                Log.e(TAG, context.getString(R.string.error_bad_request));
+            }
+            else if(urlConnection.getResponseCode() == Constants.SERVICE_UNAVAILABLE_RESPONSE_CODE){
+                Log.e(TAG, context.getString(R.string.error_server_anavailable));
             } else {
-                Log.e(TAG, "Error response code: " + urlConnection.getResponseCode());
+                Log.e(TAG, context.getString(R.string.error_response_code) + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(TAG, "Problem retrieving the News JSON results.", e);
+            Log.e(TAG, context.getString(R.string.exception_error_retrieve_json_result), e);
         } finally {
 
             if (urlConnection != null) {
@@ -127,7 +133,7 @@ public class Utils {
         return output.toString();
     }
 
-    public static List<News> extractFeatureFromJson(String newsJSON) {
+    private static List<News> extractFeatureFromJson(String newsJSON) {
         /** If the JSON string is empty or null, then return early. */
         if (TextUtils.isEmpty(newsJSON)) {
             return null;
@@ -212,7 +218,7 @@ public class Utils {
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, "Problem parsing the news JSON results", e);
+            Log.e(TAG, context.getString(R.string.exception_json_error_parsing), e);
         }
         return newsList;
     }

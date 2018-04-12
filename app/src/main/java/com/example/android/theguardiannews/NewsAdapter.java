@@ -142,7 +142,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
                 return newFormat.format(oldFormat.parse(stringTimeStamp));
             }
         } catch (Exception e) {
-            Log.e(TAG,"Failed formatting the date.", e);
+            Log.e(TAG, context.getString(R.string.exception_error_format_date), e);
         }
         return stringTimeStamp;
     }
@@ -165,4 +165,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         notifyDataSetChanged();
     }
 
+    public List<News> getNewsList() {
+        return newsList;
+    }
 }
