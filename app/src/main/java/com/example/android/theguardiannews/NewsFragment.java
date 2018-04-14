@@ -140,6 +140,7 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
             // if search news already exist. destroy loader to create new search
            /* if (LOADER_ID == Constants.SEARCH){
                 loaderManager.destroyLoader(Constants.SEARCH);
+                Log.e(TAG, "LOADER with ID: "+ LOADER_ID +" destroyed.");
             }*/
             // Get loaderId from fragmentPosition, so that a different loaderId is assigned for each section
             LOADER_ID = getFragmentPosition();
@@ -289,8 +290,14 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
         return loaderManager;
     }
 
+    public int getLOADER_ID() {
+        return LOADER_ID;
+    }
+
     @Override
     public void onRefresh() {
         loaderManager.restartLoader(LOADER_ID, null, this);
     }
+
+
 }

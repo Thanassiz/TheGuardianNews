@@ -226,25 +226,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchNews() {
 
-         NewsFragment newsFragment = NewsFragment.newInstance(searchText, Constants.SEARCH);
 
+        NewsFragment newsFragment = NewsFragment.newInstance(searchText, Constants.SEARCH);
         // Checks if search news fragment exist, if not create, else replace it with new search
         if (categoryAdapter.getCount() < 13){
+
             categoryAdapter.addFragment(newsFragment);
         } else {
-          newsFragment = (NewsFragment) categoryAdapter.getItem(Constants.SEARCH);
+         /*   newsFragment = (NewsFragment) categoryAdapter.getItem(Constants.SEARCH);
             if (newsFragment.getMyLoaderManager() != null){
                 newsFragment.getMyLoaderManager().destroyLoader(Constants.SEARCH);
                 Log.e(TAG, "LOADER IS DESTROYED");
             }
             newsFragment = NewsFragment.newInstance(searchText, Constants.SEARCH);
             categoryAdapter.replaceFragment(newsFragment);
-
-            //categoryAdapter.replaceFragment(newsFragment);
+          */
+            categoryAdapter.replaceFragment(newsFragment);
         }
         binding.viewpager.setCurrentItem(Constants.SEARCH);
         // REFRESH HERE
-        //newsFragment.onRefresh();
+       newsFragment.onRefresh();
 
     }
 
