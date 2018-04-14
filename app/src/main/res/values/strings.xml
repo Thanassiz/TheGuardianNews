@@ -17,6 +17,7 @@
     <string name="fragment_education">Education</string>
     <string name="fragment_environment">Environment</string>
     <string name="fragment_fashion">Fashion</string>
+    <string name="fragment_search">Search</string>
 
     <!-- ERRORS -->
     <string name="no_news_found">No news found.</string>

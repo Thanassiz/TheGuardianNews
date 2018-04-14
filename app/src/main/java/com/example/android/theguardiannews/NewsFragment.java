@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -31,12 +32,13 @@ import static com.example.android.theguardiannews.MainActivity.searchText;
 /**
  * A simple {@link NewsFragment} subclass.
  */
-public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<News>> {
+public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<News>> , SwipeRefreshLayout.OnRefreshListener{
 
     private final String TAG = NewsFragment.class.getName();
     private FragmentLayoutBinding fragmentBinding;
 
     private int LOADER_ID;
+    LoaderManager loaderManager;
     private NewsAdapter adapter;
     private List<News> listNews;
     private static final String API_BASE_URL = "http://content.guardianapis.com/search?";
@@ -79,10 +81,13 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
         if (inflater == null) {
             inflater = LayoutInflater.from(container.getContext());
         }
+
         fragmentBinding = FragmentLayoutBinding.inflate(inflater, container, false);
         View rootView = fragmentBinding.getRoot();
         //fragmentBinding = DataBindingUtil.bind(inflater.inflate(R.layout.fragment_layout, container, false));
 
+        // Updated news when screen in swiped
+        fragmentBinding.refreshLayout.setOnRefreshListener(this);
         // Create a new adapter that takes the list as input
         listNews = new ArrayList<>();
         adapter = new NewsAdapter(getContext(), listNews);
@@ -131,7 +136,11 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
         // If there is a network connection, fetch data
         if (checkConnectivity()) {
             // Get a reference to the LoaderManager, in order to interact with loaders.
-            LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+            loaderManager = getActivity().getSupportLoaderManager();
+            // if search news already exist. destroy loader to create new search
+           /* if (LOADER_ID == Constants.SEARCH){
+                loaderManager.destroyLoader(Constants.SEARCH);
+            }*/
             // Get loaderId from fragmentPosition, so that a different loaderId is assigned for each section
             LOADER_ID = getFragmentPosition();
             loaderManager.initLoader(LOADER_ID, null, this);
@@ -204,6 +213,8 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
      */
     @Override
     public void onLoadFinished(@NonNull Loader<List<News>> loader, List<News> news) {
+
+        fragmentBinding.refreshLayout.setRefreshing(false);
         // Hide loading indicator because the data has been loaded
         fragmentBinding.loadingIndicator.setVisibility(View.GONE);
         // Set empty state text to display "No news found."
@@ -272,5 +283,14 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
      */
     private String convertToAPI(String inputSearchString){
         return  inputSearchString.replaceAll(" " ,"%20AND%20");
+    }
+
+    public LoaderManager getMyLoaderManager(){
+        return loaderManager;
+    }
+
+    @Override
+    public void onRefresh() {
+        loaderManager.restartLoader(LOADER_ID, null, this);
     }
 }

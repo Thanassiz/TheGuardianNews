@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     CategoryAdapter categoryAdapter;
     AppCompatSpinner spinner;
-    NewsFragment newsFragment;
-    public static String searchText;
+    public static String searchText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Log.e(TAG, "VIEWPAGER ->" + position);
+                //Log.e(TAG, "VIEWPAGER ->" + position);
                 // Set spinner similar to the corresponding viewpager's fragment position
                 spinner.setSelection(position);
             }
@@ -120,19 +119,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setSpinner() {
 
-        final ArrayList<String> spinnerList = new ArrayList<>();
-        spinnerList.add(getString(R.string.fragment_home));
-        spinnerList.add(getString(R.string.fragment_music));
-        spinnerList.add(getString(R.string.fragment_business));
-        spinnerList.add(getString(R.string.fragment_technology));
-        spinnerList.add(getString(R.string.fragment_politics));
-        spinnerList.add(getString(R.string.fragment_sport) + "s");
-        spinnerList.add(getString(R.string.fragment_weather));
-        spinnerList.add(getString(R.string.fragment_film) + "s");
-        spinnerList.add(getString(R.string.fragment_money));
-        spinnerList.add(getString(R.string.fragment_education));
-        spinnerList.add(getString(R.string.fragment_environment));
-        spinnerList.add(getString(R.string.fragment_fashion));
+        final ArrayList<String> spinnerList = (ArrayList) categoryAdapter.getTabTitleList();
 
         spinner = (AppCompatSpinner) binding.navView.getMenu().findItem(R.id.nav_spinner).getActionView();
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerList));
@@ -140,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e(TAG, "SPINNER ->" + position);
+                //Log.e(TAG, "SPINNER ->" + position);
                 Toast.makeText(MainActivity.this, spinnerList.get(position), Toast.LENGTH_SHORT).show();
                 switch (position) {
                     case Constants.HOME:
@@ -191,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
                         binding.viewpager.setCurrentItem(Constants.FASHION);
                         binding.drawer.closeDrawers();
                         break;
+                    case Constants.SEARCH:
+                        binding.viewpager.setCurrentItem(Constants.SEARCH);
+                        binding.drawer.closeDrawers();
+                        break;
                     default:
                         break;
                 }
@@ -235,11 +226,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchNews() {
 
-        newsFragment = NewsFragment.newInstance(searchText, 13);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, newsFragment, "searchTag")
-                .addToBackStack("viewPagerTag")
-                .commit();
+         NewsFragment newsFragment = NewsFragment.newInstance(searchText, Constants.SEARCH);
+
+        // Checks if search news fragment exist, if not create, else replace it with new search
+        if (categoryAdapter.getCount() < 13){
+            categoryAdapter.addFragment(newsFragment);
+        } else {
+          newsFragment = (NewsFragment) categoryAdapter.getItem(Constants.SEARCH);
+            if (newsFragment.getMyLoaderManager() != null){
+                newsFragment.getMyLoaderManager().destroyLoader(Constants.SEARCH);
+                Log.e(TAG, "LOADER IS DESTROYED");
+            }
+            newsFragment = NewsFragment.newInstance(searchText, Constants.SEARCH);
+            categoryAdapter.replaceFragment(newsFragment);
+
+            //categoryAdapter.replaceFragment(newsFragment);
+        }
+        binding.viewpager.setCurrentItem(Constants.SEARCH);
+        // REFRESH HERE
+        //newsFragment.onRefresh();
+
     }
 
     /**
@@ -253,22 +259,20 @@ public class MainActivity extends AppCompatActivity {
             // We retrieve the fragment container showed right now
             // The viewpager assigns tags to fragment automatically like this
             // binding.viewpager is our ViewPager instance
-            Fragment fragment = fragmentManager.findFragmentByTag("searchTag");
-            //Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + binding.viewpager.getId() + ":" + binding.viewpager.getCurrentItem());
+            Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + binding.viewpager.getId() + ":" + binding.viewpager.getCurrentItem());
             // And thanks to the fragment container, we retrieve its child fragment manager
             // holding our fragment in the back stack
             FragmentManager childFragmentManager = fragment.getChildFragmentManager();
             // And here we go, if the back stack is empty, we let the back button doing its job
             // Otherwise, we show the last entry in the back stack (our FragmentToShow)
             if (childFragmentManager.getBackStackEntryCount() == 0) {
-                super.onBackPressed();
+
+                NewsFragment searchFragment = (NewsFragment) categoryAdapter.getItem(Constants.SEARCH);
+                categoryAdapter.removeFragment(searchFragment);
+                //super.onBackPressed();
             } else {
                 childFragmentManager.popBackStack();
             }
-
-            // Remove Fragment
-         /*   getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-            childFragmentManager.beginTransaction().remove(fragment).commit();*/
             binding.includeToolbar.backButton.setVisibility(View.GONE);
         }
     }

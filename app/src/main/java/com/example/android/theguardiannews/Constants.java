@@ -24,6 +24,7 @@ public final class Constants {
     static final int EDUCATION = 9;
     static final int ENVIRONMENT = 10;
     static final int FASHION = 11;
+    static final int SEARCH = 12;
 
     /**  Extract the key associated with the JSONObject */
     static final String JSON_KEY_RESPONSE = "response";
